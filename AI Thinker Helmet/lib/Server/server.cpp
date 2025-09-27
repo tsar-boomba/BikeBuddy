@@ -169,6 +169,14 @@ void start_camera_server(httpd_handle_t stream_httpd, httpd_handle_t camera_http
     .user_ctx = NULL
   };
 
+
+  httpd_uri_t brake_uri = {
+    .uri = "/brake",
+    .method = HTTP_GET,
+    .handler = brake_handler,
+    .user_ctx = NULL
+  };
+
   ra_filter_init(&ra_filter, 20);
 
   log_i("Starting web server on port: '%d'", config.server_port);
@@ -190,6 +198,7 @@ void start_camera_server(httpd_handle_t stream_httpd, httpd_handle_t camera_http
     // into the camera handler
     httpd_register_uri_handler(camera_httpd, &left_signal_uri);
     httpd_register_uri_handler(camera_httpd, &right_signal_uri);
+    httpd_register_uri_handler(camera_httpd, &brake_uri);
   }
 
   config.server_port += 1;
