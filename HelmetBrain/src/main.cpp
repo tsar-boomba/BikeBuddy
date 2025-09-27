@@ -125,7 +125,7 @@ void setup() {
   setupLedFlash();
 #endif
 
-  WiFi.softAP(ssid, password, 1);
+  WiFi.softAP(ssid, password, 1, 0, 4);
 
   startCameraServer();
 
