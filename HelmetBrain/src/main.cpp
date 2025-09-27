@@ -2,11 +2,13 @@
 #include <WiFi.h>
 #include <SPI.h>
 #include <TFT_eSPI.h> // Hardware-specific library
+#include <server.h>
+#include "camera_pins.h"
 
 // ===========================
 // Select camera model in board_config.h
 // ===========================
-#include "board_config.h"
+// #include "board_config.h"
 
 // ===========================
 // Enter your WiFi credentials
@@ -14,7 +16,6 @@
 const char *ssid = "helmetwap";
 const char *password = "helmet123";
 
-void startCameraServer();
 void setupLedFlash();
 
 /*
@@ -123,7 +124,10 @@ void setup() {
 
   WiFi.softAP(ssid, password, 1, 0, 4);
 
-  startCameraServer();
+  httpd_handle_t stream_httpd = NULL;
+  httpd_handle_t camera_httpd = NULL;
+
+  start_camera_server(stream_httpd, camera_httpd);
 
   Serial.print("Camera Ready! Use 'http://");
   Serial.print(WiFi.localIP());
