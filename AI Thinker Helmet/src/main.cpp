@@ -14,7 +14,7 @@
 // ===========================
 // Enter your WiFi credentials
 // ===========================
-const char *ssid = "badhelmetwap";
+const char *ssid = "helmetwap";
 const char *password = "helmet123";
 
 
@@ -140,10 +140,11 @@ int frame = 0;
 void loop() {
   tft.fillScreen(TFT_BLACK);
   if (frame % 2 == 0) {
+    Serial.println(left_handler ? "Left" : "Right");
     if (left_handler) {
       tft.drawTriangle(20, TFT_HEIGHT/2, 50, TFT_HEIGHT/4,  50, TFT_HEIGHT/4 * 3, TFT_YELLOW);
     }
-    if (left_handler) {
+    if (right_handler) {
       tft.drawTriangle(TFT_WIDTH-20, TFT_HEIGHT/2, TFT_WIDTH-50, TFT_HEIGHT/4,  TFT_WIDTH-50, TFT_HEIGHT/4 * 3, TFT_YELLOW);
     }
   }
