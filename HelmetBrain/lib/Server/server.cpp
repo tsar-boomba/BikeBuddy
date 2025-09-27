@@ -165,7 +165,7 @@ void start_camera_server(httpd_handle_t stream_httpd, httpd_handle_t camera_http
   httpd_uri_t right_signal_uri = {
     .uri = "/right",
     .method = HTTP_GET,
-    .handler = left_signal_handler,
+    .handler = right_signal_handler,
     .user_ctx = NULL
   };
 
