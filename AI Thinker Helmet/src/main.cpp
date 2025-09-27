@@ -2,11 +2,13 @@
 #include <WiFi.h>
 #include <SPI.h>
 #include <TFT_eSPI.h> // Hardware-specific library
+#include <server.h>
+#include "camera_pins.h"
 
 // ===========================
 // Select camera model in board_config.h
 // ===========================
-#include "board_config.h"
+// #include "board_config.h"
 
 // ===========================
 // Enter your WiFi credentials
@@ -14,7 +16,6 @@
 const char *ssid = "badhelmetwap";
 const char *password = "helmet123";
 
-void startCameraServer();
 void setupLedFlash();
 
 /*
@@ -30,7 +31,6 @@ void setup() {
   Serial.begin(115200);
   Serial.setDebugOutput(true);
   delay(1000);
-  Serial.println("klhjhlkjlkjh");
 
   tft.init();
 
@@ -113,6 +113,10 @@ void setup() {
   s->set_hmirror(s, 1);
 #endif
 
+#if defined(CAMERA_MODEL_ESP32S3_EYE)
+  s->set_vflip(s, 1);
+#endif
+
 // Setup LED FLash if LED pin is defined in camera_pins.h
 #if defined(LED_GPIO_NUM)
   setupLedFlash();
@@ -120,7 +124,10 @@ void setup() {
 
   WiFi.softAP(ssid, password, 1, 0, 4);
 
-  startCameraServer();
+  httpd_handle_t stream_httpd = NULL;
+  httpd_handle_t camera_httpd = NULL;
+
+  start_camera_server(stream_httpd, camera_httpd);
 
   Serial.print("Camera Ready! Use 'http://");
   Serial.print(WiFi.localIP());
@@ -128,7 +135,10 @@ void setup() {
 }
 
 void loop() {
-  tft.fillScreen(TFT_BLACK);
+  // Do nothing. Everything is done in another task by the web server
+  delay(10000);
+
+    tft.fillScreen(TFT_BLACK);
 
   // Draw some random circles
   for (int i = 0; i < 40; i++)
