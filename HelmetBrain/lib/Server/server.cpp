@@ -1,8 +1,9 @@
 #include "esp_http_server.h"
-#include "camera_handler.h"
 #include "sdkconfig.h"
 #include "esp32-hal-ledc.h"
 #include "esp32-hal-log.h"
+#include "camera_handler.h"
+#include "controls_handler.h"
 
 extern ra_filter_t ra_filter;
 
@@ -153,6 +154,21 @@ void start_camera_server(httpd_handle_t stream_httpd, httpd_handle_t camera_http
 #endif
   };
 
+
+  httpd_uri_t left_signal_uri = {
+    .uri = "/left",
+    .method = HTTP_GET,
+    .handler = left_signal_handler,
+    .user_ctx = NULL
+  };
+
+  httpd_uri_t right_signal_uri = {
+    .uri = "/right",
+    .method = HTTP_GET,
+    .handler = left_signal_handler,
+    .user_ctx = NULL
+  };
+
   ra_filter_init(&ra_filter, 20);
 
   log_i("Starting web server on port: '%d'", config.server_port);
@@ -168,6 +184,12 @@ void start_camera_server(httpd_handle_t stream_httpd, httpd_handle_t camera_http
     httpd_register_uri_handler(camera_httpd, &greg_uri);
     httpd_register_uri_handler(camera_httpd, &pll_uri);
     httpd_register_uri_handler(camera_httpd, &win_uri);
+
+    // Would like to have its own http server, but for simplicity sake 
+    // we are incorporating our driver controls (turning signals)
+    // into the camera handler
+    httpd_register_uri_handler(camera_httpd, &left_signal_uri);
+    httpd_register_uri_handler(camera_httpd, &right_signal_uri);
   }
 
   config.server_port += 1;
