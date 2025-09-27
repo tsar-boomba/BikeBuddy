@@ -1,5 +1,7 @@
 #include "esp_camera.h"
 #include <WiFi.h>
+#include <SPI.h>
+#include <TFT_eSPI.h> // Hardware-specific library
 
 // ===========================
 // Select camera model in board_config.h
@@ -21,11 +23,6 @@ void setupLedFlash();
   This sketch does not use any fonts.
 */
 
-#include <SPI.h>
-
-#include <TFT_eSPI.h> // Hardware-specific library
-
-
 TFT_eSPI tft = TFT_eSPI();       // Invoke custom library
 
 
@@ -38,8 +35,7 @@ void setup() {
 
   tft.setRotation(1);
 
-
-  Serial.println();
+  tft.fillScreen(TFT_RED);
 
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
@@ -151,7 +147,7 @@ void loop() {
   }
 
   delay(2000);
-  tft.fillScreen(TFT_BLACK);
+  tft.fillScreen(TFT_BLUE);
 
   for (int i = 0; i < 40; i++)
   {
