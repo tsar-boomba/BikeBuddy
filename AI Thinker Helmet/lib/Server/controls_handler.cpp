@@ -3,6 +3,9 @@
 #include "esp_http_server.h"
 #include "esp32-hal-log.h"
 
+bool left_handler = false;
+bool right_handler = false;
+
 
 esp_err_t left_signal_handler(httpd_req_t *req) {
     char *query_str;
@@ -12,8 +15,10 @@ esp_err_t left_signal_handler(httpd_req_t *req) {
         if (httpd_query_key_value(query_str, "status", status_val, sizeof(status_val)) == ESP_OK) {
             if (strcmp(status_val, "1") == 0) {
                 log_i("Left signal is on\n");
+                left_handler = true;
             } else if (strcmp(status_val, "0") == 0) {
                 log_i("Left signal is off\n");
+                left_handler = false;
             } else {
                 log_i("Status parameter not found %s\n", status_val);
             }
@@ -31,8 +36,10 @@ esp_err_t right_signal_handler(httpd_req_t *req) {
         if (httpd_query_key_value(query_str, "status", status_val, sizeof(status_val)) == ESP_OK) {
             if (strcmp(status_val, "1") == 0) {
                 log_i("Right signal is on\n");
+                right_handler = true;
             } else if (strcmp(status_val, "0") == 0) {
                 log_i("Right signal is off\n");
+                right_handler = false;
             } else {
                 log_i("Right parameter not found %s\n", status_val);
             }
