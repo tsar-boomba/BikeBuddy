@@ -39,7 +39,7 @@ void setup() {
 
   tft.setRotation(0);
 
-  tft.fillScreen(TFT_RED);
+  tft.fillScreen(TFT_BLACK);
 
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
@@ -137,15 +137,27 @@ void setup() {
   Serial.println("' to connect");
 }
 int frame = 0;
+
+int background_color = TFT_BLACK;
 void loop() {
-  tft.fillScreen(TFT_BLACK);
-  if (frame % 2 == 0) {
-    Serial.println(left_handler ? "Left" : "Right");
+  if (frame % 5 < 3) {
     if (left_handler) {
-      tft.drawTriangle(20, TFT_HEIGHT/2, 50, TFT_HEIGHT/4,  50, TFT_HEIGHT/4 * 3, TFT_YELLOW);
+      tft.fillTriangle(TFT_WIDTH/2, 20, TFT_WIDTH/6, 80, TFT_WIDTH/6*5, 80, TFT_YELLOW);
+      tft.fillRect(TFT_WIDTH/4, 80, TFT_WIDTH/2, 30, TFT_YELLOW);
     }
     if (right_handler) {
-      tft.drawTriangle(TFT_WIDTH-20, TFT_HEIGHT/2, TFT_WIDTH-50, TFT_HEIGHT/4,  TFT_WIDTH-50, TFT_HEIGHT/4 * 3, TFT_YELLOW);
+      tft.fillTriangle(TFT_WIDTH/2, TFT_HEIGHT- 20, TFT_WIDTH/6, TFT_HEIGHT-80, TFT_WIDTH/6*5, TFT_HEIGHT-80, TFT_YELLOW);
+      tft.fillRect(TFT_WIDTH/4, TFT_HEIGHT-110, TFT_WIDTH/2, 30, TFT_YELLOW);
+    }
+  } else {
+    if (background_color != break_handler ? TFT_RED : TFT_BLACK) {
+      background_color = break_handler ? TFT_RED : TFT_BLACK;
+      tft.fillScreen(background_color);
+    } else {
+      tft.fillTriangle(TFT_WIDTH/2, TFT_HEIGHT- 20, TFT_WIDTH/6, TFT_HEIGHT-80, TFT_WIDTH/6*5, TFT_HEIGHT-80, background_color);
+      tft.fillRect(TFT_WIDTH/4, TFT_HEIGHT-110, TFT_WIDTH/2, 30, background_color); 
+      tft.fillTriangle(TFT_WIDTH/2, 20, TFT_WIDTH/6, 80, TFT_WIDTH/6*5, 80, background_color);
+      tft.fillRect(TFT_WIDTH/4, 80, TFT_WIDTH/2, 30, background_color);
     }
   }
 

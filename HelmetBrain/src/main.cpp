@@ -4,6 +4,7 @@
 #include <TFT_eSPI.h> // Hardware-specific library
 #include <server.h>
 #include "camera_pins.h"
+#include "controls_handler.h"
 
 // ===========================
 // Select camera model in board_config.h
@@ -15,6 +16,8 @@
 // ===========================
 const char *ssid = "helmetwap";
 const char *password = "helmet123";
+
+
 
 void setupLedFlash();
 
@@ -34,9 +37,9 @@ void setup() {
 
   tft.init();
 
-  tft.setRotation(1);
+  tft.setRotation(0);
 
-  tft.fillScreen(TFT_RED);
+  tft.fillScreen(TFT_BLACK);
 
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
@@ -58,7 +61,7 @@ void setup() {
   config.pin_pwdn = PWDN_GPIO_NUM;
   config.pin_reset = RESET_GPIO_NUM;
   config.xclk_freq_hz = 20000000;
-  config.frame_size = FRAMESIZE_UXGA;
+  config.frame_size = FRAMESIZE_VGA;
   config.pixel_format = PIXFORMAT_JPEG;  // for streaming
   //config.pixel_format = PIXFORMAT_RGB565; // for face detection/recognition
   config.grab_mode = CAMERA_GRAB_WHEN_EMPTY;
@@ -103,10 +106,10 @@ void setup() {
     s->set_brightness(s, 1);   // up the brightness just a bit
     s->set_saturation(s, -2);  // lower the saturation
   }
-  // drop down frame size for higher initial frame rate
-  if (config.pixel_format == PIXFORMAT_JPEG) {
-    s->set_framesize(s, FRAMESIZE_QVGA);
-  }
+  // // drop down frame size for higher initial frame rate
+  // if (config.pixel_format == PIXFORMAT_JPEG) {
+  //   s->set_framesize(s, FRAMESIZE_QVGA);
+  // }
 
 #if defined(CAMERA_MODEL_M5STACK_WIDE) || defined(CAMERA_MODEL_M5STACK_ESP32CAM)
   s->set_vflip(s, 1);
@@ -133,34 +136,31 @@ void setup() {
   Serial.print(WiFi.localIP());
   Serial.println("' to connect");
 }
+int frame = 0;
 
+int background_color = TFT_BLACK;
 void loop() {
-  // Do nothing. Everything is done in another task by the web server
-  delay(10000);
-
-    tft.fillScreen(TFT_BLACK);
-
-  // Draw some random circles
-  for (int i = 0; i < 40; i++)
-  {
-    int rx = random(60);
-    int ry = random(60);
-    int x = rx + random(480 - rx - rx);
-    int y = ry + random(320 - ry - ry);
-    tft.fillEllipse(x, y, rx, ry, random(0xFFFF));
+  if (frame % 5 < 3) {
+    if (left_handler) {
+      tft.fillTriangle(TFT_WIDTH/2, 20, TFT_WIDTH/6, 80, TFT_WIDTH/6*5, 80, TFT_YELLOW);
+      tft.fillRect(TFT_WIDTH/4, 80, TFT_WIDTH/2, 30, TFT_YELLOW);
+    }
+    if (right_handler) {
+      tft.fillTriangle(TFT_WIDTH/2, TFT_HEIGHT- 20, TFT_WIDTH/6, TFT_HEIGHT-80, TFT_WIDTH/6*5, TFT_HEIGHT-80, TFT_YELLOW);
+      tft.fillRect(TFT_WIDTH/4, TFT_HEIGHT-110, TFT_WIDTH/2, 30, TFT_YELLOW);
+    }
+  } else {
+    if (background_color != break_handler ? TFT_RED : TFT_BLACK) {
+      background_color = break_handler ? TFT_RED : TFT_BLACK;
+      tft.fillScreen(background_color);
+    } else {
+      tft.fillTriangle(TFT_WIDTH/2, TFT_HEIGHT- 20, TFT_WIDTH/6, TFT_HEIGHT-80, TFT_WIDTH/6*5, TFT_HEIGHT-80, background_color);
+      tft.fillRect(TFT_WIDTH/4, TFT_HEIGHT-110, TFT_WIDTH/2, 30, background_color); 
+      tft.fillTriangle(TFT_WIDTH/2, 20, TFT_WIDTH/6, 80, TFT_WIDTH/6*5, 80, background_color);
+      tft.fillRect(TFT_WIDTH/4, 80, TFT_WIDTH/2, 30, background_color);
+    }
   }
 
-  delay(2000);
-  tft.fillScreen(TFT_BLUE);
-
-  for (int i = 0; i < 40; i++)
-  {
-    int rx = random(60);
-    int ry = random(60);
-    int x = rx + random(480 - rx - rx);
-    int y = ry + random(320 - ry - ry);
-    tft.drawEllipse(x, y, rx, ry, random(0xFFFF));
-  }
-
-  delay(2000);
+  delay(100);
+  frame++;
 }

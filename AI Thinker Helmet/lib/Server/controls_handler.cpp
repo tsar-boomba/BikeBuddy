@@ -5,6 +5,7 @@
 
 bool left_handler = false;
 bool right_handler = false;
+int break_handler = 0;
 
 
 esp_err_t left_signal_handler(httpd_req_t *req) {
@@ -57,8 +58,10 @@ esp_err_t brake_handler(httpd_req_t *req) {
         if (httpd_query_key_value(query_str, "status", status_val, sizeof(status_val)) == ESP_OK) {
             if (strcmp(status_val, "1") == 0) {
                 log_i("Brake is on\n");
+                break_handler = 1;
             } else if (strcmp(status_val, "0") == 0) {
                 log_i("Brake is off\n");
+                break_handler = 0;
             } else {
                 log_i("Brake parameter not found %s\n", status_val);
             }

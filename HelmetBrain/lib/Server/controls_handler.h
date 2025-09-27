@@ -5,5 +5,10 @@
 
 esp_err_t left_signal_handler(httpd_req_t *req);
 esp_err_t right_signal_handler(httpd_req_t *req);
+esp_err_t brake_handler(httpd_req_t *req);
+
+extern bool left_handler;
+extern bool right_handler;
+extern int break_handler;
 
 #endif  // CONTROLS_HANDLER_H
