@@ -68,5 +68,8 @@ esp_err_t brake_handler(httpd_req_t *req) {
         }
     }
 
+    httpd_resp_set_status(req, "200 OK");
+    httpd_resp_set_type(req, "text/plain");
+    httpd_resp_send(req, "", 0);
     return ESP_OK;
 }
