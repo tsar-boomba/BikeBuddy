@@ -58,7 +58,8 @@
 						"infoPlist": {
 							"NSAppTransportSecurity": {
 								"NSAllowsArbitraryLoads": true
-							}
+							},
+							"NSPhotoLibraryAddUsageDescription": "This app needs access to your photo library to save images."
 						}
 					}
 				}
@@ -74,6 +75,15 @@
 				{
 					"requestLocationPermission": true,
 					"locationPermission": "Allow $(PRODUCT_NAME) to use your location"
+				}
+			],
+			[
+				"expo-media-library",
+				{
+					"photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
+					"savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
+					"isAccessMediaLocationEnabled": true,
+					"granularPermissions": ["photo"]
 				}
 			]
 		],

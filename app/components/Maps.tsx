@@ -50,27 +50,6 @@ export const Maps = ({ style }: Props) => {
 		return (
 			<AppleMaps.View
 				style={style}
-				onCameraMove={({ coordinates: { latitude, longitude } }) => {
-					if (
-						latitude !== currCoords.current?.latitude ||
-						longitude !== currCoords.current?.longitude
-					) {
-						console.log('User moved map!');
-						setUserMoved(true);
-						setTimeout(() => setUserMoved(false), 5000);
-					}
-				}}
-				cameraPosition={
-					userMoved
-						? undefined
-						: {
-								coordinates: {
-									latitude: coords?.latitude,
-									longitude: coords?.longitude,
-								},
-								zoom: 17,
-							}
-				}
 				properties={{
 					isMyLocationEnabled: true,
 					selectionEnabled: false,
