@@ -80,22 +80,20 @@ int wifi_request(String request) {
   Serial.println(request);
   client.print(request);
 
-    int maxloops = 0;
+  // int maxloops = 0;
 
-  //wait for the server's reply to become available
-  while (!client.available() && maxloops < 1000) {
-    maxloops++;
-    delay(1);  //delay 1 msec
-  }
-  if (client.available() > 0) {
-    //read back one line from the server
-    String line = client.readStringUntil('\r');
-    Serial.println(line);
-  } else {
-    Serial.println("client.available() timed out ");
-  }
-
-
+  // //wait for the server's reply to become available
+  // while (!client.available() && maxloops < 1000) {
+  //   maxloops++;
+  //   delay(1);  //delay 1 msec
+  // }
+  // if (client.available() > 0) {
+  //   //read back one line from the server
+  //   String line = client.readStringUntil('\r');
+  //   Serial.println(line);
+  // } else {
+  //   Serial.println("client.available() timed out ");
+  // }
 
   Serial.println("Closing connection.");
   client.stop();
