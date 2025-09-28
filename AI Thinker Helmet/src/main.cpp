@@ -150,8 +150,8 @@ void loop() {
       tft.fillRect(TFT_WIDTH/4, TFT_HEIGHT-110, TFT_WIDTH/2, 30, TFT_YELLOW);
     }
   } else {
-    if (background_color != break_handler ? TFT_RED : TFT_BLACK) {
-      background_color = break_handler ? TFT_RED : TFT_BLACK;
+    if (background_color != break_status ? TFT_RED : TFT_BLACK) {
+      background_color = break_status ? TFT_RED : TFT_BLACK;
       tft.fillScreen(background_color);
     } else {
       tft.fillTriangle(TFT_WIDTH/2, TFT_HEIGHT- 20, TFT_WIDTH/6, TFT_HEIGHT-80, TFT_WIDTH/6*5, TFT_HEIGHT-80, background_color);
