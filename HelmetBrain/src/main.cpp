@@ -141,7 +141,7 @@ int frame = 0;
 int background_color = TFT_BLACK;
 void loop() {
   if (frame % 5 < 3) {
-    if (left_handler) {
+    if (!left_handler) {
       tft.fillTriangle(TFT_WIDTH/2, 20, TFT_WIDTH/6, 80, TFT_WIDTH/6*5, 80, TFT_YELLOW);
       tft.fillRect(TFT_WIDTH/4, 80, TFT_WIDTH/2, 30, TFT_YELLOW);
     }

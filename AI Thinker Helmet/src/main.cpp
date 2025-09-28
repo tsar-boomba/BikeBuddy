@@ -110,7 +110,7 @@ void setup() {
   // if (config.pixel_format == PIXFORMAT_JPEG) {
   //   s->set_framesize(s, FRAMESIZE_QVGA);
   // }
-
+s->set_vflip(s, 1);
 #if defined(CAMERA_MODEL_M5STACK_WIDE) || defined(CAMERA_MODEL_M5STACK_ESP32CAM)
   s->set_vflip(s, 1);
   s->set_hmirror(s, 1);
