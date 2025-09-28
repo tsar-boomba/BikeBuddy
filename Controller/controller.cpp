@@ -8,20 +8,29 @@
 
 WiFiMulti WiFiMulti;
 
-void setup()
-{
+const uint16_t port = 80;
+const char *host = "192.168.4.1";
+
+const int leftPin = 5;
+const int rightPin = 9;
+
+int leftTurn = 0;
+int rightTurn = 0;
+
+void setup() {
   Serial.begin(115200);
+  pinMode(leftPin, INPUT_PULLUP);
+  pinMode(rightPin, INPUT_PULLUP);
+
   delay(10);
 
-  // We start by connecting to a WiFi network
-  WiFiMulti.addAP("SSID", "passpasspass");
+  WiFiMulti.addAP("helmetwap", "helmet123");
 
   Serial.println();
   Serial.println();
   Serial.print("Waiting for WiFi... ");
 
-  while (WiFiMulti.run() != WL_CONNECTED)
-  {
+  while (WiFiMulti.run() != WL_CONNECTED) {
     Serial.print(".");
     delay(500);
   }
@@ -34,52 +43,62 @@ void setup()
   delay(500);
 }
 
-void loop()
-{
-  //    const uint16_t port = 80;
-  //    const char * host = "192.168.1.1"; // ip or dns
-  const uint16_t port = 1337;
-  const char *host = "192.168.1.10"; // ip or dns
+void loop() {
+  int curLeft = !digitalRead(leftPin);
+  int curRight = !digitalRead(rightPin);
+  int success;
 
+  if (curLeft != leftTurn) {
+    String request = "GET /left?status=" + String(curLeft) + " HTTP/1.1\r\n\r\n";
+    success = wifi_request(request);
+    if (success == 1) {
+      leftTurn = curLeft;
+    }
+  } 
+  
+  if (curRight != rightTurn) {
+    String request = "GET /right?status=" + String(curRight) + " HTTP/1.1\r\n\r\n";
+    success = wifi_request(request);
+    if (success == 1) {
+      rightTurn = curRight;
+    }
+  }
+}
+
+int wifi_request(String request) {
   Serial.print("Connecting to ");
   Serial.println(host);
 
-  // Use NetworkClient class to create TCP connections
   NetworkClient client;
 
-  if (!client.connect(host, port))
-  {
+  if (!client.connect(host, port)) {
     Serial.println("Connection failed.");
-    Serial.println("Waiting 5 seconds before retrying...");
-    delay(5000);
-    return;
+    return 0;
   }
 
-  // This will send a request to the server
-  client.print("GET /index.html HTTP/1.1\n\n");
+  Serial.print("Sending request: ");
+  Serial.println(request);
+  client.print(request);
 
-  int maxloops = 0;
+    int maxloops = 0;
 
-  // wait for the server's reply to become available
-  while (!client.available() && maxloops < 1000)
-  {
+  //wait for the server's reply to become available
+  while (!client.available() && maxloops < 1000) {
     maxloops++;
-    delay(1); // delay 1 msec
+    delay(1);  //delay 1 msec
   }
-  if (client.available() > 0)
-  {
-    // read back one line from the server
+  if (client.available() > 0) {
+    //read back one line from the server
     String line = client.readStringUntil('\r');
     Serial.println(line);
-  }
-  else
-  {
+  } else {
     Serial.println("client.available() timed out ");
   }
+
+
 
   Serial.println("Closing connection.");
   client.stop();
 
-  Serial.println("Waiting 5 seconds before restarting...");
-  delay(5000);
+  return 1; 
 }
